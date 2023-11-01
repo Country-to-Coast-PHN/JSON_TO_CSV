@@ -1,0 +1,52 @@
+
+import csv
+import json
+import shutil
+# Your JSON data
+# Specify the JSON file path
+json_file_path = "C:/Users/---/Extract September 2023.json"
+
+# Specify the CSV file path
+csv_file_path = "C:/Users/--/Extract September 2023.csv"
+
+try:
+    # Read the JSON file
+    with open(json_file_path, 'r') as json_file:
+        data = json.load(json_file)
+
+    # Extract data from the JSON file (modify this as per your JSON structure)
+    json_data = data.get("qim01-diabetes", [])
+
+    # Define the CSV file path
+    csv_file_path = json_file_path.replace(".json", ".csv")
+
+    # Open the CSV file for writing
+    with open(csv_file_path, 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+
+        # Write the header row to the CSV file
+        header = ["sex", "age_group", "indigenous_status", "diabetes_type", "hba1c_result", "numerator", "denominator"]
+        csv_writer.writerow(header)
+
+        # Write the JSON data to the CSV file
+        for entry in json_data:
+            csv_writer.writerow([entry["sex"], entry["age_group"], entry["indigenous_status"],
+                                entry["diabetes_type"], entry["hba1c_result"], entry["numerator"], entry["denominator"]])
+
+    print(f"JSON data has been successfully converted to CSV: {csv_file_path}")
+
+    # Define the target directory
+    target_directory = "C:/Users/fanm/Desktop/json/"
+
+    # Use shutil to move the CSV file to the target directory
+    #shutil.move(csv_file_path, target_directory)
+
+    print(f"CSV file has been moved to: {target_directory}")
+
+except FileNotFoundError:
+    print("JSON file not found. Please provide a valid file path.")
+except json.JSONDecodeError as e:
+    print(f"JSON decoding error: {e}")
+except Exception as ex:
+    print(f"An error occurred: {ex}")
+
